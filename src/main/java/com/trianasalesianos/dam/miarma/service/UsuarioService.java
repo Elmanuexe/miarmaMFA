@@ -1,6 +1,7 @@
 package com.trianasalesianos.dam.miarma.service;
 
 import com.trianasalesianos.dam.miarma.model.Usuario;
+import com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto.CreateUsuarioDto;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -15,7 +16,7 @@ public interface UsuarioService {
 
     Usuario getUsuarioByNick(String nick);
 
-    Usuario addUsuario(Usuario nuevo);
+    Usuario addUsuario(CreateUsuarioDto nuevo);
 
 
 

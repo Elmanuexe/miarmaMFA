@@ -62,7 +62,7 @@ public class Usuario implements Serializable, UserDetails {
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
 
     //ASOCIACIONES//
-
+    //TODO Asociaciones
 
     //OVERRIDES//
 
