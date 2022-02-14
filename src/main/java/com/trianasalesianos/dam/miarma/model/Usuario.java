@@ -1,6 +1,5 @@
 package com.trianasalesianos.dam.miarma.model;
 
-import com.trianasalesianos.dam.miarma.model.enumeracion.Role;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -39,13 +38,22 @@ public class Usuario implements Serializable, UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private String nombre, apellidos, direccion, telefono, avatar, password;
+    private String direccion, telefono, password;
 
-    @Column(unique = true)
+    @Column(nullable = false)
+    private Boolean privado;
+
+    @Column(nullable = false)
+    private String avatar;
+
+    @Column(unique = true, nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable = false, unique = true)
+    private String nick;
+
+    @Column(nullable = false)
+    private LocalDateTime nacimiento;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -60,12 +68,12 @@ public class Usuario implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return nick;
     }
 
     @Override
