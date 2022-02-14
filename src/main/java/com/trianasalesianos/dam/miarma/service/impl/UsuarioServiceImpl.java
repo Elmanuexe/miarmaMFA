@@ -24,7 +24,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario getInfoById(UUID id) {
         return usuarioRepository.getById(id);
-
     }
 
     @Override
@@ -45,7 +44,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario getUsuarioByNick(String nick) {
-        return null;
+        return usuarioRepository.getUsuario(nick);
     }
 
     @Override
