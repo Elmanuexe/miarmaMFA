@@ -1,4 +1,4 @@
-package triana.salesianos.dam.TrianaTourist.errores.config;
+package com.trianasalesianos.dam.miarma.errores.config;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

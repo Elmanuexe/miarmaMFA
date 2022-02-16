@@ -42,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
             antiguo.setNacimiento(nuevo.getNacimiento());
             antiguo.setNick(nuevo.getNick());
             antiguo.setPassword(nuevo.getPassword());
-            antiguo.setPrivado(nuevo.getPrivado());
+            antiguo.setPrivado(nuevo.isPrivado());
             return usuarioRepository.save(nuevo);
         }
         else throw new EntityNotFoundException("No se ha encontrado usuario con esa ID");
@@ -61,7 +61,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
                 .email(nuevo.getEmail())
                 .direccion(nuevo.getDireccion())
                 .telefono(nuevo.getTelefono())
-                .privado(nuevo.isPrivado())
+                .privado(nuevo.getPrivado())
                 .nacimiento(nuevo.getNacimiento())
                 .build();
         return usuarioRepository.save(u);

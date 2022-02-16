@@ -14,7 +14,7 @@ public class UsuarioDtoConverter {
                 .direccion(u.getDireccion())
                 .email(u.getEmail())
                 .nacimiento(u.getNacimiento())
-                .privado(u.getPrivado())
+                .privado(u.isPrivado())
                 .telefono(u.getTelefono())
                 .build();
     }

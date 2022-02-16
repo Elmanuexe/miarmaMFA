@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -38,22 +39,11 @@ public class Usuario implements Serializable, UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private String direccion, telefono, password;
+    private String nick, telefono, direccion, avatar, email, password;
 
-    @Column(nullable = false)
-    private Boolean privado;
+    private boolean privado;
 
-    @Column(nullable = false)
-    private String avatar;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false, unique = true)
-    private String nick;
-
-    @Column(nullable = false)
-    private LocalDateTime nacimiento;
+    private LocalDate nacimiento;
 
     @CreatedDate
     private LocalDateTime createdAt;

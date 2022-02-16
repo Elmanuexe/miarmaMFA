@@ -1,5 +1,9 @@
-package triana.salesianos.dam.TrianaTourist.errores;
+package com.trianasalesianos.dam.miarma.errores;
 
+import com.trianasalesianos.dam.miarma.errores.excepciones.EntityNotFoundException;
+import com.trianasalesianos.dam.miarma.errores.modelo.ApiError;
+import com.trianasalesianos.dam.miarma.errores.modelo.ApiSubError;
+import com.trianasalesianos.dam.miarma.errores.modelo.ApiValidationSubError;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,10 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import triana.salesianos.dam.TrianaTourist.errores.excepciones.EntityNotFoundException;
-import triana.salesianos.dam.TrianaTourist.errores.modelo.ApiError;
-import triana.salesianos.dam.TrianaTourist.errores.modelo.ApiSubError;
-import triana.salesianos.dam.TrianaTourist.errores.modelo.ApiValidationSubError;
+
 
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;

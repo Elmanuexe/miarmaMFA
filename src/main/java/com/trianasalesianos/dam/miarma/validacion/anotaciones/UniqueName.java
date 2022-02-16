@@ -1,6 +1,6 @@
-package triana.salesianos.dam.TrianaTourist.validacion.anotaciones;
+package com.trianasalesianos.dam.miarma.validacion.anotaciones;
 
-import triana.salesianos.dam.TrianaTourist.validacion.validadores.UniqueNameValidator;
+import com.trianasalesianos.dam.miarma.validacion.validadores.UniqueNameValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

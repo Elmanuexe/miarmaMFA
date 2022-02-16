@@ -1,4 +1,4 @@
-package triana.salesianos.dam.TrianaTourist.errores.modelo;
+package com.trianasalesianos.dam.miarma.errores.modelo;
 
 public abstract class ApiSubError {
 }

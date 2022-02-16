@@ -7,6 +7,7 @@ import org.hibernate.annotations.Parameter;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -34,6 +35,6 @@ public class GetUsuarioDto {
 
     private boolean privado;
 
-    private LocalDateTime nacimiento;
+    private LocalDate nacimiento;
 
 }

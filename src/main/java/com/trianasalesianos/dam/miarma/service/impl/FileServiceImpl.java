@@ -1,22 +1,21 @@
 package com.trianasalesianos.dam.miarma.service.impl;
 
 import com.trianasalesianos.dam.miarma.config.StorageProperties;
-import com.trianasalesianos.dam.miarma.exception.StorageException;
+import com.trianasalesianos.dam.miarma.errores.excepciones.StorageException;
 import com.trianasalesianos.dam.miarma.service.FileService;
-import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
 @Service
@@ -41,7 +40,39 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String store(MultipartFile file) {
-        return null;
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String newFilename = "";
+        try {
+            // Si el fichero está vacío, excepción al canto
+            if (file.isEmpty())
+                throw new StorageException("El fichero subido está vacío");
+
+            newFilename = filename;
+            while(Files.exists(rootLocation.resolve(newFilename))) {
+                // Tratamos de generar uno nuevo
+                String extension = StringUtils.getFilenameExtension(newFilename);
+                String name = newFilename.replace("."+extension,"");
+
+                String suffix = Long.toString(System.currentTimeMillis());
+                suffix = suffix.substring(suffix.length()-6);
+
+                newFilename = name + "_" + suffix + "." + extension;
+
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, rootLocation.resolve(newFilename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+
+
+
+        } catch (IOException ex) {
+            throw new StorageException("Error en el almacenamiento del fichero: " + newFilename, ex);
+        }
+
+        return newFilename;
+
     }
 
     @Override
@@ -71,12 +102,6 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String resizeImage(MultipartFile file) {
-
-        BufferedImage scaled = Scalr.resize(original, 512);
-
-        OutputStream out = Files.newOutputStream(Paths.get("triana-thumb.jpeg"));
-
-        ImageIO.write(scaled, "jpg", out);
         return null;
     }
 }

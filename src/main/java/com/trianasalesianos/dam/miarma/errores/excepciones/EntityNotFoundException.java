@@ -1,4 +1,4 @@
-package triana.salesianos.dam.TrianaTourist.errores.excepciones;
+package com.trianasalesianos.dam.miarma.errores.excepciones;
 
 public class EntityNotFoundException extends RuntimeException{
 

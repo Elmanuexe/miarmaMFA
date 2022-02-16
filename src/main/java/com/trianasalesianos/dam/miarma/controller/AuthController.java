@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -30,7 +32,7 @@ public class AuthController {
 
     //TODO implementar imagen y reescalado
     @PostMapping("/auth/register")
-    public ResponseEntity<GetUsuarioDto> nuevoUsuario(@RequestBody CreateUsuarioDto nuevoUs){
+    public ResponseEntity<GetUsuarioDto> nuevoUsuario(@Valid @RequestBody CreateUsuarioDto nuevoUs){
         Usuario guardado = usuarioService.addUsuario(nuevoUs);
         return ResponseEntity.ok(dtoConverter.convertUsuarioToGetUsuarioDto(guardado));
     }

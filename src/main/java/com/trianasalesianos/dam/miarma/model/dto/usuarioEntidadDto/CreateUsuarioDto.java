@@ -1,17 +1,35 @@
 package com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto;
 
+import com.trianasalesianos.dam.miarma.validacion.anotaciones.UniqueName;
 import lombok.*;
+import org.hibernate.validator.constraints.URL;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 public class CreateUsuarioDto {
 
-    private String nick, telefono, direccion, avatar, email, password;
+    private String direccion, telefono, password, password2;
 
-    private boolean privado;
+    @NotNull(message = "{usuario.privado.empty}")
+    private Boolean privado;
 
-    private LocalDateTime nacimiento;
+    //@URL(message = "{usuairo.avatar.valid}")
+    //@NotEmpty(message = "{usuario.avatar.empty}")
+    private String avatar;
+
+    @NotEmpty(message = "{usuario.email.empty}")
+    private String email;
+
+    @NotEmpty(message = "{usuario.nombre.empty}")
+    @UniqueName(message = "{usuario.nombre.unico}")
+    private String nick;
+
+    @NotNull(message = "{usuario.nacimiento.empty}")
+    private LocalDate nacimiento;
 }
