@@ -18,6 +18,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     boolean existsByNick(@NotBlank String nick);
 
+    Optional<Usuario> findById(UUID id);
+
     Optional<Usuario> findUsuarioByNick(@NotBlank String nick);
 
     default Usuario getUsuario(String nick){return getUsuarioByNick(nick);}

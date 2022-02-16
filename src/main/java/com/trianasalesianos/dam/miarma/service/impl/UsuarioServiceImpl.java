@@ -2,6 +2,8 @@ package com.trianasalesianos.dam.miarma.service.impl;
 
 import com.trianasalesianos.dam.miarma.model.Usuario;
 import com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto.CreateUsuarioDto;
+import com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto.GetUsuarioDto;
+import com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto.UsuarioDtoConverter;
 import com.trianasalesianos.dam.miarma.repository.UsuarioRepository;
 import com.trianasalesianos.dam.miarma.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioDtoConverter dtoConverter;
 
     @Override
     public Optional<Usuario> findById(UUID id) {
@@ -29,23 +32,25 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
     @Override
     public Usuario getInfoById(UUID id) {
-        return usuarioRepository.getById(id);
+        if (usuarioRepository.existsById(id)){
+            return usuarioRepository.getById(id);
+        }else {
+            throw new EntityNotFoundException("No se ha encontrado usuario con esa ID");
+        }
+
     }
 
     @Override
-    public Usuario updateUsuario(Usuario nuevo, UUID id) {
-        if (usuarioRepository.existsById(id)) {
-            Usuario antiguo = usuarioRepository.findById(id).get();
+    public Usuario updateUsuario(CreateUsuarioDto nuevo, UUID id) {
+            Usuario antiguo = findById(id).get();
             antiguo.setAvatar(nuevo.getAvatar());
             antiguo.setDireccion(nuevo.getDireccion());
             antiguo.setEmail(nuevo.getEmail());
             antiguo.setNacimiento(nuevo.getNacimiento());
             antiguo.setNick(nuevo.getNick());
             antiguo.setPassword(nuevo.getPassword());
-            antiguo.setPrivado(nuevo.isPrivado());
-            return usuarioRepository.save(nuevo);
-        }
-        else throw new EntityNotFoundException("No se ha encontrado usuario con esa ID");
+            antiguo.setPrivado(nuevo.getPrivado());
+            return usuarioRepository.save(antiguo);
     }
 
     @Override
