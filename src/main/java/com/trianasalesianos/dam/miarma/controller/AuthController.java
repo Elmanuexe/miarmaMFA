@@ -7,6 +7,7 @@ import com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto.UsuarioDtoCon
 import com.trianasalesianos.dam.miarma.security.dto.JwtUsuarioResponse;
 import com.trianasalesianos.dam.miarma.security.dto.LoginDto;
 import com.trianasalesianos.dam.miarma.security.jwt.JwtProvider;
+import com.trianasalesianos.dam.miarma.service.impl.UsuarioEntiadService;
 import com.trianasalesianos.dam.miarma.service.impl.UsuarioServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,18 +17,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UsuarioServiceImpl usuarioService;
+    private final UsuarioEntiadService usuarioEntiadService;
     private final UsuarioDtoConverter dtoConverter;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
@@ -72,8 +73,8 @@ public class AuthController {
 
     //TODO implementar imagen y reescalado
     @PostMapping("/auth/register")
-    public ResponseEntity<GetUsuarioDto> nuevoUsuario(@Valid @RequestBody CreateUsuarioDto nuevoUs){
-        Usuario guardado = usuarioService.addUsuario(nuevoUs);
+    public ResponseEntity<GetUsuarioDto> nuevoUsuario(@Valid @RequestPart("usuario") CreateUsuarioDto nuevoUs, @RequestPart("file") MultipartFile file) throws IOException {
+        Usuario guardado = usuarioEntiadService.save(nuevoUs, file);
         return ResponseEntity.ok(dtoConverter.convertUsuarioToGetUsuarioDto(guardado));
     }
 }

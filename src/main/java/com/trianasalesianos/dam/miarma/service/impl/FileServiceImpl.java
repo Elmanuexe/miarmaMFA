@@ -1,21 +1,32 @@
 package com.trianasalesianos.dam.miarma.service.impl;
 
 import com.trianasalesianos.dam.miarma.config.StorageProperties;
+import com.trianasalesianos.dam.miarma.errores.excepciones.EmptyFileException;
+import com.trianasalesianos.dam.miarma.errores.excepciones.NotSuportedContentException;
 import com.trianasalesianos.dam.miarma.errores.excepciones.StorageException;
+import com.trianasalesianos.dam.miarma.resource.MediaTypeUrlResource;
 import com.trianasalesianos.dam.miarma.service.FileService;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -30,78 +41,65 @@ public class FileServiceImpl implements FileService {
 
     @PostConstruct
     @Override
-    public void init() {
-        try {
-            Files.createDirectories(rootLocation);
-        } catch (IOException e) {
-            throw new StorageException("No se pudo inicializar la localización", e);
-        }
+    public void init() throws IOException {
+        Files.createDirectories(rootLocation);
     }
 
     @Override
-    public String store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        String newFilename = "";
-        try {
-            // Si el fichero está vacío, excepción al canto
-            if (file.isEmpty())
-                throw new StorageException("El fichero subido está vacío");
+    public String saveFile(MultipartFile file) throws IOException {
+        if(file.isEmpty()) throw new EmptyFileException(EmptyFileException.class);
+        String extension=StringUtils.getFilenameExtension(file.getOriginalFilename());
 
-            newFilename = filename;
-            while(Files.exists(rootLocation.resolve(newFilename))) {
-                // Tratamos de generar uno nuevo
-                String extension = StringUtils.getFilenameExtension(newFilename);
-                String name = newFilename.replace("."+extension,"");
+        String nombreArchivo=generarNombre(file)+"."+extension;
 
-                String suffix = Long.toString(System.currentTimeMillis());
-                suffix = suffix.substring(suffix.length()-6);
-
-                newFilename = name + "_" + suffix + "." + extension;
-
-            }
-
-            try (InputStream inputStream = file.getInputStream()) {
-                Files.copy(inputStream, rootLocation.resolve(newFilename),
-                        StandardCopyOption.REPLACE_EXISTING);
-            }
-
-
-
-        } catch (IOException ex) {
-            throw new StorageException("Error en el almacenamiento del fichero: " + newFilename, ex);
+        try (InputStream inputStream = file.getInputStream()) {
+            Files.copy(inputStream, this.rootLocation.resolve(nombreArchivo),
+                    StandardCopyOption.REPLACE_EXISTING);
         }
-
-        return newFilename;
-
-    }
-
-    @Override
-    public Stream<Path> loadAll() {
-        return null;
+        return nombreArchivo;
     }
 
     @Override
     public Path load(String filename) {
-        return null;
+        return rootLocation.resolve(filename);
     }
 
     @Override
-    public Resource loadAsResource(String filename) {
-        return null;
+    public String reescalarAndGuardar(MultipartFile file,int size) throws IOException {
+        String extension=StringUtils.getFilenameExtension(file.getOriginalFilename());
+        String nombreArchivo=generarNombre(file);
+        nombreArchivo+="."+extension;
+
+        BufferedImage bufferedImage= ImageIO.read(file.getInputStream());
+        BufferedImage escalado = Scalr.resize(bufferedImage, size);
+
+        OutputStream out=Files.newOutputStream(Paths.get("uploads/"+nombreArchivo));
+        ImageIO.write(escalado,extension,out);
+        return nombreArchivo;
     }
 
-    @Override
-    public void deleteFile(String filename) {
 
+    private String generarNombre (MultipartFile file){
+        String extension=StringUtils.getFilenameExtension(file.getOriginalFilename());
+
+        Double nuevoNombreDigito = Math.random();
+        String nuevoNombre = nuevoNombreDigito.toString().substring(2,10);
+        String nombreFinal= nuevoNombre+"."+extension;
+
+        while(Files.exists(rootLocation.resolve(nombreFinal))){
+
+            nuevoNombreDigito = Math.random();
+            nuevoNombre = nuevoNombreDigito.toString().substring(2,10);
+            nombreFinal= nuevoNombre+"."+extension;
+
+        }
+        return nuevoNombre;
     }
 
-    @Override
-    public void deleteAll() {
-
-    }
-
-    @Override
-    public String resizeImage(MultipartFile file) {
-        return null;
+    public String getUri (String fileName){
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/resource/")
+                .path(fileName)
+                .toUriString();
     }
 }

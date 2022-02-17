@@ -20,11 +20,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
+public class UsuarioServiceImpl implements UsuarioService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
-    private final UsuarioDtoConverter dtoConverter;
 
     @Override
     public Optional<Usuario> findById(UUID id) {
@@ -33,9 +31,9 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
     @Override
     public Usuario getInfoById(UUID id) {
-        if (usuarioRepository.existsById(id)){
+        if (usuarioRepository.existsById(id)) {
             return usuarioRepository.getById(id);
-        }else {
+        } else {
             throw new EntityNotFoundException("No se ha encontrado usuario con esa ID");
         }
 
@@ -43,24 +41,15 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
 
     @Override
     public Usuario updateUsuario(CreateUsuarioDto nuevo, UUID id) {
-            Usuario antiguo = findById(id).get();
-            antiguo.setAvatar(nuevo.getAvatar());
-            antiguo.setDireccion(nuevo.getDireccion());
-            antiguo.setEmail(nuevo.getEmail());
-            antiguo.setNacimiento(nuevo.getNacimiento());
-            antiguo.setNick(nuevo.getNick());
-            antiguo.setPassword(nuevo.getPassword());
-            antiguo.setPrivado(nuevo.getPrivado());
-            return usuarioRepository.save(antiguo);
-    }
-
-    @Override
-    public Usuario findByEmail(String email) {
-        if (usuarioRepository.existsByEmail(email)){
-            return usuarioRepository.findByEmail(email).get();
-        }else {
-            throw new EntityNotFoundException("No se ha encontrado usuarios con este email");
-        }
+        Usuario antiguo = findById(id).get();
+        antiguo.setAvatar(nuevo.getUri());
+        antiguo.setDireccion(nuevo.getDireccion());
+        antiguo.setEmail(nuevo.getEmail());
+        antiguo.setNacimiento(nuevo.getNacimiento());
+        antiguo.setNick(nuevo.getNick());
+        antiguo.setPassword(nuevo.getPassword());
+        antiguo.setPrivado(nuevo.getPrivado());
+        return usuarioRepository.save(antiguo);
     }
 
     @Override
@@ -68,21 +57,4 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
         return usuarioRepository.getUsuario(nick);
     }
 
-    @Override
-    public Usuario addUsuario(CreateUsuarioDto nuevo) {
-        Usuario u = Usuario.builder()
-                .password(passwordEncoder.encode(nuevo.getPassword()))
-                .nick(nuevo.getNick())
-                .email(nuevo.getEmail())
-                .direccion(nuevo.getDireccion())
-                .telefono(nuevo.getTelefono())
-                .privado(nuevo.getPrivado())
-                .nacimiento(nuevo.getNacimiento())
-                .createdAt(LocalDateTime.now())
-                .build();
-        return usuarioRepository.save(u);
-    }
-
-    @Override
-    public Usuario loadUserByUsername(String email) {return findByEmail(email);}
 }

@@ -21,7 +21,7 @@ public class CreateUsuarioDto {
 
     //@URL(message = "{usuairo.avatar.valid}")
     //@NotEmpty(message = "{usuario.avatar.empty}")
-    private String avatar;
+    private String uri;
 
     @NotEmpty(message = "{usuario.email.empty}")
     private String email;
