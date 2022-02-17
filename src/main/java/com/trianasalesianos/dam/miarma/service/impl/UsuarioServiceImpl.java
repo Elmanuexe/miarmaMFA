@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,6 +55,15 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
     }
 
     @Override
+    public Usuario findByEmail(String email) {
+        if (usuarioRepository.existsByEmail(email)){
+            return usuarioRepository.findByEmail(email).get();
+        }else {
+            throw new EntityNotFoundException("No se ha encontrado usuarios con este email");
+        }
+    }
+
+    @Override
     public Usuario getUsuarioByNick(String nick) {
         return usuarioRepository.getUsuario(nick);
     }
@@ -68,13 +78,11 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
                 .telefono(nuevo.getTelefono())
                 .privado(nuevo.getPrivado())
                 .nacimiento(nuevo.getNacimiento())
+                .createdAt(LocalDateTime.now())
                 .build();
         return usuarioRepository.save(u);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return this.usuarioRepository.findByEmail(email)
-                .orElseThrow(()-> new UsernameNotFoundException(email + "no encontrado"));
-    }
+    public Usuario loadUserByUsername(String email) {return findByEmail(email);}
 }

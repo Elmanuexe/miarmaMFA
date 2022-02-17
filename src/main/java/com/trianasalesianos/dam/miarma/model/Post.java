@@ -33,4 +33,10 @@ public class Post {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
+
+    private String titulo, descripcion;
+
+    private boolean privado;
+
+
 }

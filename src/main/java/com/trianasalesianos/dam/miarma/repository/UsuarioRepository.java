@@ -18,6 +18,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     boolean existsByNick(@NotBlank String nick);
 
+    boolean existsByEmail(@NotBlank String email);
+
     Optional<Usuario> findById(UUID id);
 
     Optional<Usuario> findUsuarioByNick(@NotBlank String nick);
@@ -26,7 +28,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
 
     default Usuario getUsuarioByNick(String nick){
         return findUsuarioByNick(nick)
-                .orElseThrow(() -> new UsernameNotFoundException(nick));
+                .orElseThrow(() -> new UsernameNotFoundException("No se ha encontrado el usuario con el nick"+ nick));
     }
 
 

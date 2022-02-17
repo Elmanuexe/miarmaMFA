@@ -15,6 +15,8 @@ public interface UsuarioService {
 
     Usuario updateUsuario(CreateUsuarioDto nuevo, UUID id);
 
+    Usuario findByEmail(String email);
+
     Usuario getUsuarioByNick(String nick);
 
     Usuario addUsuario(CreateUsuarioDto nuevo);
