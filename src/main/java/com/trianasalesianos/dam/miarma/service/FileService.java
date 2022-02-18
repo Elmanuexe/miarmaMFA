@@ -16,6 +16,8 @@ public interface FileService {
 
     String saveFile(MultipartFile file) throws IOException;
 
+    Resource cargarRecurso(String filename) throws MalformedURLException, FileNotFoundException;
+
     Path load(String filename);
 
     String reescalarAndGuardar(MultipartFile file,int size) throws IOException;

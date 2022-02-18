@@ -12,4 +12,5 @@ public interface UsuarioEntiadRepository extends JpaRepository<Usuario, UUID> {
 
     Optional<Usuario> findByEmail(String email);
 
+    Optional<Usuario> findByNick(String nick);
 }

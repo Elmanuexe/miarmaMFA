@@ -52,9 +52,4 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioRepository.save(antiguo);
     }
 
-    @Override
-    public Usuario getUsuarioByNick(String nick) {
-        return usuarioRepository.getUsuario(nick);
-    }
-
 }

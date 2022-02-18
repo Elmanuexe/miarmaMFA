@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.URL;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Getter @Setter
@@ -19,8 +20,6 @@ public class CreateUsuarioDto {
     @NotNull(message = "{usuario.privado.empty}")
     private Boolean privado;
 
-    //@URL(message = "{usuairo.avatar.valid}")
-    //@NotEmpty(message = "{usuario.avatar.empty}")
     private String uri;
 
     @NotEmpty(message = "{usuario.email.empty}")
@@ -31,5 +30,6 @@ public class CreateUsuarioDto {
     private String nick;
 
     @NotNull(message = "{usuario.nacimiento.empty}")
+    @Past(message = "{usuario.nacimiento.past}")
     private LocalDate nacimiento;
 }

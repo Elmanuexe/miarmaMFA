@@ -5,10 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -38,5 +35,18 @@ public class Post {
 
     private boolean privado;
 
+    @ManyToOne
+    private Usuario usuario;
 
+    private String content;
+
+    public void addToUsuario(Usuario u){
+        this.usuario=u;
+        u.getPublicaciones().add(this);
+    }
+
+    public void removeToUsuario(Usuario u){
+        this.usuario=null;
+        u.getPublicaciones()    .remove(this);
+    }
 }

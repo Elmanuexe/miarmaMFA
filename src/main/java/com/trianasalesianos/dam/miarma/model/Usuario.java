@@ -1,5 +1,6 @@
 package com.trianasalesianos.dam.miarma.model;
 
+import com.trianasalesianos.dam.miarma.model.enumeracion.UserRole;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -9,9 +10,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +24,7 @@ import java.util.UUID;
 @NoArgsConstructor @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "users")
+@Table(name = "Usuario")
 public class Usuario implements Serializable, UserDetails {
 
     @Id
@@ -39,11 +42,17 @@ public class Usuario implements Serializable, UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    private String nick, telefono, direccion, avatar, email, password;
+    private String nick, telefono, direccion, email, password;
 
     private boolean privado;
 
+    @NotEmpty(message = "{usuario.avatar.empty}")
+    private String avatar;
+
     private LocalDate nacimiento;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -54,16 +63,20 @@ public class Usuario implements Serializable, UserDetails {
     //ASOCIACIONES//
     //TODO Asociaciones
 
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Post> publicaciones = new ArrayList<>();
+
     //OVERRIDES//
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return nick;
     }
 
     @Override

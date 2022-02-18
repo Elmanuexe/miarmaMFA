@@ -71,9 +71,11 @@ public class AuthController {
     }
 
 
-    //TODO implementar imagen y reescalado
     @PostMapping("/auth/register")
-    public ResponseEntity<GetUsuarioDto> nuevoUsuario(@Valid @RequestPart("usuario") CreateUsuarioDto nuevoUs, @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<GetUsuarioDto> nuevoUsuario(@Valid @RequestPart("usuario") CreateUsuarioDto nuevoUs, @Valid @RequestPart("file") MultipartFile file) throws IOException {
+        if (file.isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
         Usuario guardado = usuarioEntiadService.save(nuevoUs, file);
         return ResponseEntity.ok(dtoConverter.convertUsuarioToGetUsuarioDto(guardado));
     }

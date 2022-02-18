@@ -2,8 +2,6 @@ package com.trianasalesianos.dam.miarma.service.impl;
 
 import com.trianasalesianos.dam.miarma.config.StorageProperties;
 import com.trianasalesianos.dam.miarma.errores.excepciones.EmptyFileException;
-import com.trianasalesianos.dam.miarma.errores.excepciones.NotSuportedContentException;
-import com.trianasalesianos.dam.miarma.errores.excepciones.StorageException;
 import com.trianasalesianos.dam.miarma.resource.MediaTypeUrlResource;
 import com.trianasalesianos.dam.miarma.service.FileService;
 import org.imgscalr.Scalr;
@@ -26,8 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class FileServiceImpl implements FileService {
@@ -76,6 +72,17 @@ public class FileServiceImpl implements FileService {
         OutputStream out=Files.newOutputStream(Paths.get("uploads/"+nombreArchivo));
         ImageIO.write(escalado,extension,out);
         return nombreArchivo;
+    }
+
+    @Override
+    public Resource cargarRecurso(String filename) throws MalformedURLException, FileNotFoundException {
+        Path file = load(filename);
+        MediaTypeUrlResource resource = new MediaTypeUrlResource(file.toUri());
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        }
+        else   throw new FileNotFoundException(
+                "No se pudo leer el archivo: " + filename);
     }
 
 

@@ -1,7 +1,9 @@
 package com.trianasalesianos.dam.miarma.service.impl;
 
+import com.trianasalesianos.dam.miarma.errores.excepciones.FileNotFoundException;
 import com.trianasalesianos.dam.miarma.model.Usuario;
 import com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto.CreateUsuarioDto;
+import com.trianasalesianos.dam.miarma.model.enumeracion.UserRole;
 import com.trianasalesianos.dam.miarma.repository.UsuarioEntiadRepository;
 import com.trianasalesianos.dam.miarma.service.FileService;
 import com.trianasalesianos.dam.miarma.service.base.BaseService;
@@ -35,11 +37,12 @@ public class UsuarioEntiadService extends BaseService<Usuario, UUID, UsuarioEnti
     public Usuario save(CreateUsuarioDto newUsuario, MultipartFile file) throws IOException {
         if (newUsuario.getPassword().contentEquals(newUsuario.getPassword2())){
 
+            if (file.isEmpty()){
+                throw new FileNotFoundException("El usuario requiere una imagen de avatar");
+            }
             String nombreArchivo=fileService.reescalarAndGuardar(file,124);
             String uri = fileService.getUri(nombreArchivo);
             newUsuario.setUri(uri);
-
-            String ruta=fileService.saveFile(file);
 
             Usuario u = Usuario.builder()
                     .password(passwordEncoder.encode(newUsuario.getPassword()))
@@ -50,8 +53,8 @@ public class UsuarioEntiadService extends BaseService<Usuario, UUID, UsuarioEnti
                     .privado(newUsuario.getPrivado())
                     .nacimiento(newUsuario.getNacimiento())
                     .createdAt(LocalDateTime.now())
-                    .avatar(ruta)
-                    //TODO agregar rol
+                    .avatar(uri)
+                    .role(UserRole.USUARIO)
                     .build();
             return save(u);
         } else {

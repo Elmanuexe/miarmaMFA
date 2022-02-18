@@ -23,7 +23,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<Usuario> getprofile(@AuthenticationPrincipal Usuario u, @PathVariable UUID id){
+    public ResponseEntity<Usuario> getprofile(@PathVariable UUID id){
         return ResponseEntity.ok().body(usuarioService.getInfoById(id));
     }
 
