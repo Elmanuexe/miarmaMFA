@@ -47,6 +47,6 @@ public class Post {
 
     public void removeToUsuario(Usuario u){
         this.usuario=null;
-        u.getPublicaciones()    .remove(this);
+        u.getPublicaciones().remove(this);
     }
 }

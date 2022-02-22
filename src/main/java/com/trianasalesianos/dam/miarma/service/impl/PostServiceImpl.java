@@ -1,7 +1,9 @@
 package com.trianasalesianos.dam.miarma.service.impl;
 
+import com.trianasalesianos.dam.miarma.errores.excepciones.EntityNotFoundException;
 import com.trianasalesianos.dam.miarma.model.Post;
 import com.trianasalesianos.dam.miarma.model.Usuario;
+import com.trianasalesianos.dam.miarma.model.dto.postDto.CreatePostDto;
 import com.trianasalesianos.dam.miarma.repository.PostRepository;
 import com.trianasalesianos.dam.miarma.repository.UsuarioRepository;
 import com.trianasalesianos.dam.miarma.service.FileService;
@@ -23,19 +25,23 @@ public class PostServiceImpl extends BaseService<Post, UUID, PostRepository> {
     private final UsuarioRepository usuarioRepository;
     private final FileServiceImpl fileService;
 
-    public Post nuevoPost(Post post, MultipartFile file, UUID id) throws IOException {
-        Usuario u = usuarioRepository.getById(id);
+    public Post nuevoPost(CreatePostDto post, MultipartFile file, String nick) throws IOException {
+        if (usuarioRepository.existsByNick(nick)){
+            Usuario u = usuarioRepository.findUsuarioByNick(nick).get();
 
-        String nombreArchivo=fileService.reescalarAndGuardar(file,124);
-        String uri = fileService.getUri(nombreArchivo);
+            String nombreArchivo=fileService.reescalarAndGuardar(file,124);
+            String uri = fileService.getUri(nombreArchivo);
 
-        Post p = Post.builder()
-                .descripcion(post.getDescripcion())
-                .privado(post.isPrivado())
-                .titulo(post.getTitulo())
-                .content(uri)
-                .build();
-        p.addToUsuario(u);
-        return save(p);
+            Post p = Post.builder()
+                    .descripcion(post.getDescripcion())
+                    .privado(post.isPrivado())
+                    .titulo(post.getTitulo())
+                    .content(uri)
+                    .build();
+            p.addToUsuario(u);
+            return save(p);
+        }else {
+            throw  new EntityNotFoundException("No se ha encontrado al usuario con el nick" +nick);
+        }
     }
 }

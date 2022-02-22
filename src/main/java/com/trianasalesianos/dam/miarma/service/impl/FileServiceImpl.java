@@ -44,7 +44,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public String saveFile(MultipartFile file) throws IOException {
         if(file.isEmpty()) throw new EmptyFileException(EmptyFileException.class);
-        String extension=StringUtils.getFilenameExtension(file.getOriginalFilename());
+        String extension="jpg";
 
         String nombreArchivo=generarNombre(file)+"."+extension;
 
@@ -62,7 +62,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public String reescalarAndGuardar(MultipartFile file,int size) throws IOException {
-        String extension=StringUtils.getFilenameExtension(file.getOriginalFilename());
+        String extension="jpg";
         String nombreArchivo=generarNombre(file);
         nombreArchivo+="."+extension;
 
@@ -87,7 +87,7 @@ public class FileServiceImpl implements FileService {
 
 
     private String generarNombre (MultipartFile file){
-        String extension=StringUtils.getFilenameExtension(file.getOriginalFilename());
+        String extension="jpg";
 
         Double nuevoNombreDigito = Math.random();
         String nuevoNombre = nuevoNombreDigito.toString().substring(2,10);
