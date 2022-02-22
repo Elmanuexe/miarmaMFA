@@ -4,6 +4,8 @@ import com.trianasalesianos.dam.miarma.model.Post;
 import com.trianasalesianos.dam.miarma.model.dto.postDto.CreatePostDto;
 import com.trianasalesianos.dam.miarma.model.dto.postDto.GetPostDto;
 import com.trianasalesianos.dam.miarma.model.dto.postDto.PostDtoConverter;
+import com.trianasalesianos.dam.miarma.service.FileService;
+import com.trianasalesianos.dam.miarma.service.impl.FileServiceImpl;
 import com.trianasalesianos.dam.miarma.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

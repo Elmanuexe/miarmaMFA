@@ -40,6 +40,8 @@ public class Post {
 
     private String content;
 
+    private String thumbnail;
+
     public void addToUsuario(Usuario u){
         this.usuario=u;
         u.getPublicaciones().add(this);

@@ -11,7 +11,7 @@ public class GetPostDto {
 
     private UUID id;
 
-    private String titulo, descripcion, content;
+    private String titulo, descripcion, content, thumbnail;
 
     private UUID usuarioId;
 

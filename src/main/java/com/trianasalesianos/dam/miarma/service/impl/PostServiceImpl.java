@@ -29,13 +29,17 @@ public class PostServiceImpl extends BaseService<Post, UUID, PostRepository> {
         if (usuarioRepository.existsByNick(nick)){
             Usuario u = usuarioRepository.findUsuarioByNick(nick).get();
 
-            String nombreArchivo=fileService.reescalarAndGuardar(file,124);
-            String uri = fileService.getUri(nombreArchivo);
+            String fileName=fileService.saveFile(file);
+            String uri = fileService.getUri(fileName);
+
+            String thumbnail=fileService.reescalarAndGuardar(file,124);
+            String thumb_uri = fileService.getUri(thumbnail);
 
             Post p = Post.builder()
                     .descripcion(post.getDescripcion())
                     .privado(post.isPrivado())
                     .titulo(post.getTitulo())
+                    .thumbnail(thumb_uri)
                     .content(uri)
                     .build();
             p.addToUsuario(u);

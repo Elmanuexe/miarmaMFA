@@ -10,6 +10,7 @@ public class PostDtoConverter {
         return GetPostDto.builder()
                 .id(p.getId())
                 .content(p.getContent())
+                .thumbnail(p.getThumbnail())
                 .descripcion(p.getDescripcion())
                 .titulo(p.getTitulo())
                 .usuarioId(p.getUsuario().getId())
