@@ -1,6 +1,7 @@
 package com.trianasalesianos.dam.miarma.security.jwt;
 
 import com.trianasalesianos.dam.miarma.model.Usuario;
+import com.trianasalesianos.dam.miarma.service.impl.UsuarioEntiadService;
 import com.trianasalesianos.dam.miarma.service.impl.UsuarioServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
-    private final UsuarioServiceImpl usuarioService;
+    private final UsuarioEntiadService usuarioService;
     private final JwtProvider jwtProvider;
 
     @Override

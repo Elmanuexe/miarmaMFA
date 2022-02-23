@@ -11,7 +11,7 @@ public interface UsuarioService {
 
     Optional<Usuario> findById(UUID id);
 
-    Usuario getInfoById(UUID id);
+    GetUsuarioDto getInfoById(UUID id);
 
     Usuario updateUsuario(CreateUsuarioDto nuevo, UUID id);
 

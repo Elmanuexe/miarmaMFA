@@ -23,7 +23,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<Usuario> getprofile(@PathVariable UUID id){
+    public ResponseEntity<GetUsuarioDto> getprofile(@PathVariable UUID id){
         return ResponseEntity.ok().body(usuarioService.getInfoById(id));
     }
 

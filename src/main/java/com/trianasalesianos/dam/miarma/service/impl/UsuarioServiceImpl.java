@@ -7,14 +7,9 @@ import com.trianasalesianos.dam.miarma.model.dto.usuarioEntidadDto.UsuarioDtoCon
 import com.trianasalesianos.dam.miarma.repository.UsuarioRepository;
 import com.trianasalesianos.dam.miarma.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -23,16 +18,16 @@ import java.util.UUID;
 public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioDtoConverter dtoConverter;
 
     @Override
-    public Optional<Usuario> findById(UUID id) {
-        return usuarioRepository.findById(id);
-    }
+    public Optional<Usuario> findById(UUID id) {return usuarioRepository.findById(id);}
 
     @Override
-    public Usuario getInfoById(UUID id) {
-        if (usuarioRepository.existsById(id)) {
-            return usuarioRepository.getById(id);
+    public GetUsuarioDto getInfoById(UUID id) {
+        if (usuarioRepository.existsById(id)){
+            Usuario u = usuarioRepository.findById(id).get();
+            return dtoConverter.convertUsuarioToGetUsuarioDto(u);
         } else {
             throw new EntityNotFoundException("No se ha encontrado usuario con esa ID");
         }
