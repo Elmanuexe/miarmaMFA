@@ -4,6 +4,8 @@ import com.trianasalesianos.dam.miarma.errores.excepciones.EntityNotFoundExcepti
 import com.trianasalesianos.dam.miarma.model.Post;
 import com.trianasalesianos.dam.miarma.model.Usuario;
 import com.trianasalesianos.dam.miarma.model.dto.postDto.CreatePostDto;
+import com.trianasalesianos.dam.miarma.model.dto.postDto.GetPostDto;
+import com.trianasalesianos.dam.miarma.model.dto.postDto.PostDtoConverter;
 import com.trianasalesianos.dam.miarma.repository.PostRepository;
 import com.trianasalesianos.dam.miarma.repository.UsuarioRepository;
 import com.trianasalesianos.dam.miarma.service.FileService;
@@ -14,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Log
 @Service
@@ -24,6 +29,7 @@ public class PostServiceImpl extends BaseService<Post, UUID, PostRepository> {
     private final PostRepository postRepository;
     private final UsuarioRepository usuarioRepository;
     private final FileServiceImpl fileService;
+    private final PostDtoConverter dtoConverter;
 
     public Post nuevoPost(CreatePostDto post, MultipartFile file, String nick) throws IOException {
         if (usuarioRepository.existsByNick(nick)){
@@ -47,5 +53,14 @@ public class PostServiceImpl extends BaseService<Post, UUID, PostRepository> {
         }else {
             throw  new EntityNotFoundException("No se ha encontrado al usuario con el nick" +nick);
         }
+    }
+
+    public List<GetPostDto> findAllDto(){
+        List <Post> publicos;
+        publicos = postRepository.findAll().stream().filter(x -> !x.isPrivado()).collect(Collectors.toList());
+
+        List<GetPostDto> publicosDto = new ArrayList<>();
+        publicos.forEach(x -> publicosDto.add(dtoConverter.convertPostToPostDto(x)));
+        return publicosDto;
     }
 }

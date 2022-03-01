@@ -10,14 +10,12 @@ import com.trianasalesianos.dam.miarma.service.impl.PostServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,5 +32,10 @@ public class PostController {
         }
         Post post = postService.nuevoPost(p, file, nick);
         return ResponseEntity.ok(dtoConverter.convertPostToPostDto(post));
+    }
+
+    @GetMapping("/post/public")
+    public ResponseEntity<List<GetPostDto>> obtenerTodosPublic(){
+        return ResponseEntity.ok(postService.findAllDto());
     }
 }
